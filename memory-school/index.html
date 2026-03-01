@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>ความทรงจำวัยเรียน</title>
+<style>
+body {
+    margin: 0;
+    font-family: "Prompt", sans-serif;
+    background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
+    color: white;
+    text-align: center;
+    overflow-x: hidden;
+    transition: 1s;
+}
+
+#home {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+button {
+    padding: 20px 40px;
+    font-size: 24px;
+    border: none;
+    border-radius: 50px;
+    background: white;
+    color: #203a43;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    transform: scale(1.1);
+}
+
+#gallery {
+    display: none;
+    padding: 50px;
+    animation: fadeIn 2s;
+}
+
+img {
+    width: 250px;
+    margin: 15px;
+    border-radius: 15px;
+    transition: 0.3s;
+}
+
+img:hover {
+    transform: scale(1.05);
+}
+
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+</style>
+</head>
+
+<body>
+
+<div id="home">
+    <h1>ย้อนเวลาไปหาความทรงจำ</h1>
+    <button onclick="goToMemory()">ย้อนเวลา ⏳</button>
+</div>
+
+<div id="gallery">
+    <h1>ความทรงจำวัยเรียนของเรา</h1>
+    <img src="1.jpg">
+    <img src="2.jpg">
+    <img src="3.jpg">
+    <img src="4.jpg">
+    <img src="5.jpg">
+    <img src="6.jpg">
+    <img src="7.jpg">
+    <img src="8.jpg">
+    <img src="9.jpg">
+    <img src="10.jpg">
+    <img src="11.jpg">
+    <img src="12.jpg">
+    <img src="13.jpg">
+    <img src="14.jpg">
+    <img src="15.jpg">
+    <img src="16.jpg">
+    <img src="17.jpg">
+</div>
+
+<audio id="bgmusic" src="memory.mp3"></audio>
+
+<script>
+function goToMemory() {
+    document.getElementById("home").style.display = "none";
+    document.getElementById("gallery").style.display = "block";
+    document.getElementById("bgmusic").play();
+}
+</script>
+
+</body>
+</html>
