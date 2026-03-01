@@ -5,77 +5,96 @@
 <title>ความทรงจำวัยเรียน</title>
 
 <style>
-body {
-    margin: 0;
-    background: black;
-    font-family: "Prompt", sans-serif;
-    overflow: hidden;
-    color: white;
+body{
+    margin:0;
+    background:black;
+    font-family:sans-serif;
+    overflow:hidden;
+    color:white;
 }
 
 /* หน้าแรก */
-#home {
-    position: absolute;
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
-    z-index: 10;
-    transition: opacity 1.5s ease;
+#home{
+    position:absolute;
+    width:100%;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    background:linear-gradient(to bottom,#0f2027,#203a43,#2c5364);
+    z-index:10;
+    transition:opacity 1.5s ease;
+    text-align:center;
 }
 
-#home h1 {
-    font-size: 60px;
-    margin-bottom: 30px;
-    letter-spacing: 5px;
+#home h1{
+    font-size:60px;
+    letter-spacing:5px;
 }
 
-button {
-    padding: 20px 60px;
-    font-size: 24px;
-    border: none;
-    border-radius: 50px;
-    background: white;
-    color: #203a43;
-    cursor: pointer;
-    transition: 0.3s;
+.warning{
+    margin:20px 0;
+    font-size:20px;
+    opacity:0.8;
 }
 
-button:hover {
-    transform: scale(1.1);
+button{
+    padding:15px 50px;
+    font-size:20px;
+    border:none;
+    border-radius:50px;
+    background:white;
+    color:#203a43;
+    cursor:pointer;
 }
 
 /* สไลด์ */
-#slideshow {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
+#slideshow{
+    position:relative;
+    width:100vw;
+    height:100vh;
 }
 
-.slide {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    opacity: 0;
-    transition: opacity 2s ease-in-out;
+.slide{
+    position:absolute;
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    opacity:0;
+    transition:opacity 2s ease-in-out;
 }
 
-.slide.active {
-    opacity: 1;
+.slide.active{
+    opacity:1;
 }
 
-#caption {
-    position: absolute;
-    bottom: 40px;
-    width: 100%;
-    text-align: center;
-    font-size: 28px;
-    text-shadow: 0 0 20px black;
-    letter-spacing: 2px;
+#caption{
+    position:absolute;
+    bottom:40px;
+    width:100%;
+    text-align:center;
+    font-size:28px;
+}
+
+/* ฉากจบ */
+#ending{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100vh;
+    background:black;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    font-size:32px;
+    text-align:center;
+    opacity:0;
+    visibility:hidden;
+    transition:opacity 3s ease;
+    z-index:999;
 }
 </style>
 </head>
@@ -84,69 +103,89 @@ button:hover {
 
 <div id="home">
     <h1>ย้อนเวลา</h1>
+
+    <div class="warning">
+        ⚠ คำเตือน ⚠<br>
+        ย้อนเวลาไปแล้ว ระวังร้องไห้<br>
+        และโปรดดูให้จบ...
+    </div>
+
     <button onclick="startMemory()">⏳ เริ่มความทรงจำ</button>
 </div>
 
-<div id="slideshow">
-    <img src="1.jpg" class="slide active">
-    <img src="2.jpg" class="slide">
-    <img src="3.jpg" class="slide">
-    <img src="4.jpg" class="slide">
-    <img src="5.jpg" class="slide">
-    <img src="6.jpg" class="slide">
-    <img src="7.jpg" class="slide">
-    <img src="8.jpg" class="slide">
-    <img src="9.jpg" class="slide">
-    <img src="10.jpg" class="slide">
-    <img src="11.jpg" class="slide">
-    <img src="12.jpg" class="slide">
-    <img src="13.jpg" class="slide">
-    <img src="14.jpg" class="slide">
-    <img src="15.jpg" class="slide">
-    <img src="16.jpg" class="slide">
-    <img src="17.jpg" class="slide">
+<div id="slideshow"></div>
 
-    <div id="caption">ความทรงจำที่ไม่มีวันลืม...</div>
+<div id="caption">ความทรงจำที่ไม่มีวันลืม...</div>
+
+<div id="ending">
+    คิดถึงเมื่อไรมาดูได้เสมอ 🤍<br><br>
+    <button onclick="exitMemory()">🚪 ออกจากการย้อนเวลา</button>
 </div>
 
-<!-- แนะนำให้เปลี่ยนชื่อไฟล์เพลงเป็นภาษาอังกฤษ เช่น music.mp3 -->
 <audio id="bgmusic" src="บทเพลงแทนหัวใจ Our Fav Song ใจดี.mp3" preload="auto"></audio>
 
 <script>
-const slides = document.querySelectorAll(".slide");
+const slideshow = document.getElementById("slideshow");
 const music = document.getElementById("bgmusic");
+const ending = document.getElementById("ending");
+const home = document.getElementById("home");
+
 let current = 0;
 let slideInterval;
 
-function startMemory() {
+const totalImages = 15; 
 
-    // ซ่อนหน้าแรกแบบค่อยๆจาง
-    const home = document.getElementById("home");
-    home.style.opacity = "0";
-
-    setTimeout(() => {
-        home.style.display = "none";
-    }, 1500);
-
-    // เล่นเพลง
-    music.play().then(() => {
-
-        // รอ 1 วิ ให้เพลงขึ้นก่อน
-        setTimeout(() => {
-            startSlideshow();
-        }, 1000);
-
-    }).catch(() => {
-        alert("ถ้าเพลงไม่เล่น ให้เปลี่ยนชื่อไฟล์เป็นภาษาอังกฤษนะ");
-    });
+for(let i=1;i<=totalImages;i++){
+    let img = document.createElement("img");
+    img.src = i + ".jpg";
+    img.classList.add("slide");
+    if(i===1) img.classList.add("active");
+    slideshow.appendChild(img);
 }
 
-function startSlideshow() {
-    slideInterval = setInterval(() => {
+const slides = document.querySelectorAll(".slide");
+
+function startMemory(){
+    home.style.opacity = "0";
+    setTimeout(()=>{ home.style.display="none"; },1500);
+
+    music.currentTime = 0;
+    music.play();
+    startSlideshow();
+}
+
+function startSlideshow(){
+    slideInterval = setInterval(()=>{
         slides[current].classList.remove("active");
-        current = (current + 1) % slides.length;
+        current = (current+1)%slides.length;
         slides[current].classList.add("active");
-    }, 4000);
+    },4000);
+}
+
+/* เพลงจบ = ฉากจบ */
+music.addEventListener("ended",function(){
+
+    clearInterval(slideInterval);
+    slideshow.style.display = "none";
+    document.getElementById("caption").style.display = "none";
+
+    ending.style.visibility = "visible";
+    ending.style.opacity = "1";
+});
+
+/* ปุ่มออกจากการย้อนเวลา */
+function exitMemory(){
+
+    ending.style.opacity = "0";
+
+    setTimeout(()=>{
+        ending.style.visibility = "hidden";
+        slideshow.style.display = "block";
+        document.getElementById("caption").style.display = "block";
+        home.style.display = "flex";
+        home.style.opacity = "1";
+        current = 0;
+    },1500);
 }
 </script>
 
