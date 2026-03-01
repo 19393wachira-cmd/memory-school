@@ -11,7 +11,6 @@ body {
     color: white;
     text-align: center;
     overflow-x: hidden;
-    transition: 1s;
 }
 
 #home {
@@ -40,13 +39,13 @@ button:hover {
 #gallery {
     display: none;
     padding: 50px;
-    animation: fadeIn 2s;
 }
 
 img {
     width: 250px;
     margin: 15px;
     border-radius: 15px;
+    cursor: pointer;
     transition: 0.3s;
 }
 
@@ -54,9 +53,31 @@ img:hover {
     transform: scale(1.05);
 }
 
-@keyframes fadeIn {
-    from {opacity: 0;}
-    to {opacity: 1;}
+/* กล่องดูรูปเต็มจอ */
+#modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    padding-top: 50px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.9);
+}
+
+#modal img {
+    width: 70%;
+    max-width: 800px;
+}
+
+#close {
+    position: absolute;
+    top: 20px;
+    right: 40px;
+    font-size: 40px;
+    color: white;
+    cursor: pointer;
 }
 </style>
 </head>
@@ -70,23 +91,30 @@ img:hover {
 
 <div id="gallery">
     <h1>ความทรงจำวัยเรียนของเรา</h1>
-    <img src="1.jpg">
-    <img src="2.jpg">
-    <img src="3.jpg">
-    <img src="4.jpg">
-    <img src="5.jpg">
-    <img src="6.jpg">
-    <img src="7.jpg">
-    <img src="8.jpg">
-    <img src="9.jpg">
-    <img src="10.jpg">
-    <img src="11.jpg">
-    <img src="12.jpg">
-    <img src="13.jpg">
-    <img src="14.jpg">
-    <img src="15.jpg">
-    <img src="16.jpg">
-    <img src="17.jpg">
+
+    <img src="1.jpg" onclick="openModal(this.src)">
+    <img src="2.jpg" onclick="openModal(this.src)">
+    <img src="3.jpg" onclick="openModal(this.src)">
+    <img src="4.jpg" onclick="openModal(this.src)">
+    <img src="5.jpg" onclick="openModal(this.src)">
+    <img src="6.jpg" onclick="openModal(this.src)">
+    <img src="7.jpg" onclick="openModal(this.src)">
+    <img src="8.jpg" onclick="openModal(this.src)">
+    <img src="9.jpg" onclick="openModal(this.src)">
+    <img src="10.jpg" onclick="openModal(this.src)">
+    <img src="11.jpg" onclick="openModal(this.src)">
+    <img src="12.jpg" onclick="openModal(this.src)">
+    <img src="13.jpg" onclick="openModal(this.src)">
+    <img src="14.jpg" onclick="openModal(this.src)">
+    <img src="15.jpg" onclick="openModal(this.src)">
+    <img src="16.jpg" onclick="openModal(this.src)">
+    <img src="17.jpg" onclick="openModal(this.src)">
+</div>
+
+<!-- กล่องดูรูป -->
+<div id="modal" onclick="closeModal()">
+    <span id="close">&times;</span>
+    <img id="modalImg">
 </div>
 
 <audio id="bgmusic" src="memory.mp3"></audio>
@@ -96,6 +124,15 @@ function goToMemory() {
     document.getElementById("home").style.display = "none";
     document.getElementById("gallery").style.display = "block";
     document.getElementById("bgmusic").play();
+}
+
+function openModal(src) {
+    document.getElementById("modal").style.display = "block";
+    document.getElementById("modalImg").src = src;
+}
+
+function closeModal() {
+    document.getElementById("modal").style.display = "none";
 }
 </script>
 
