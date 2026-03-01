@@ -3,26 +3,38 @@
 <head>
 <meta charset="UTF-8">
 <title>ความทรงจำวัยเรียน</title>
+
 <style>
 body {
     margin: 0;
+    background: black;
     font-family: "Prompt", sans-serif;
-    background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
+    overflow: hidden;
     color: white;
-    text-align: center;
-    overflow-x: hidden;
 }
 
+/* หน้าแรก */
 #home {
+    position: absolute;
+    width: 100%;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
+    z-index: 10;
+    transition: opacity 1.5s ease;
+}
+
+#home h1 {
+    font-size: 60px;
+    margin-bottom: 30px;
+    letter-spacing: 5px;
 }
 
 button {
-    padding: 20px 40px;
+    padding: 20px 60px;
     font-size: 24px;
     border: none;
     border-radius: 50px;
@@ -36,48 +48,34 @@ button:hover {
     transform: scale(1.1);
 }
 
-#gallery {
-    display: none;
-    padding: 50px;
+/* สไลด์ */
+#slideshow {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
 }
 
-img {
-    width: 250px;
-    margin: 15px;
-    border-radius: 15px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-img:hover {
-    transform: scale(1.05);
-}
-
-/* กล่องดูรูปเต็มจอ */
-#modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    padding-top: 50px;
-    left: 0;
-    top: 0;
+.slide {
+    position: absolute;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.9);
+    object-fit: contain;
+    opacity: 0;
+    transition: opacity 2s ease-in-out;
 }
 
-#modal img {
-    width: 70%;
-    max-width: 800px;
+.slide.active {
+    opacity: 1;
 }
 
-#close {
+#caption {
     position: absolute;
-    top: 20px;
-    right: 40px;
-    font-size: 40px;
-    color: white;
-    cursor: pointer;
+    bottom: 40px;
+    width: 100%;
+    text-align: center;
+    font-size: 28px;
+    text-shadow: 0 0 20px black;
+    letter-spacing: 2px;
 }
 </style>
 </head>
@@ -85,54 +83,70 @@ img:hover {
 <body>
 
 <div id="home">
-    <h1>ย้อนเวลาไปหาความทรงจำ</h1>
-    <button onclick="goToMemory()">ย้อนเวลา ⏳</button>
+    <h1>ย้อนเวลา</h1>
+    <button onclick="startMemory()">⏳ เริ่มความทรงจำ</button>
 </div>
 
-<div id="gallery">
-    <h1>ความทรงจำวัยเรียนของเรา</h1>
+<div id="slideshow">
+    <img src="1.jpg" class="slide active">
+    <img src="2.jpg" class="slide">
+    <img src="3.jpg" class="slide">
+    <img src="4.jpg" class="slide">
+    <img src="5.jpg" class="slide">
+    <img src="6.jpg" class="slide">
+    <img src="7.jpg" class="slide">
+    <img src="8.jpg" class="slide">
+    <img src="9.jpg" class="slide">
+    <img src="10.jpg" class="slide">
+    <img src="11.jpg" class="slide">
+    <img src="12.jpg" class="slide">
+    <img src="13.jpg" class="slide">
+    <img src="14.jpg" class="slide">
+    <img src="15.jpg" class="slide">
+    <img src="16.jpg" class="slide">
+    <img src="17.jpg" class="slide">
 
-    <img src="1.jpg" onclick="openModal(this.src)">
-    <img src="2.jpg" onclick="openModal(this.src)">
-    <img src="3.jpg" onclick="openModal(this.src)">
-    <img src="4.jpg" onclick="openModal(this.src)">
-    <img src="5.jpg" onclick="openModal(this.src)">
-    <img src="6.jpg" onclick="openModal(this.src)">
-    <img src="7.jpg" onclick="openModal(this.src)">
-    <img src="8.jpg" onclick="openModal(this.src)">
-    <img src="9.jpg" onclick="openModal(this.src)">
-    <img src="10.jpg" onclick="openModal(this.src)">
-    <img src="11.jpg" onclick="openModal(this.src)">
-    <img src="12.jpg" onclick="openModal(this.src)">
-    <img src="13.jpg" onclick="openModal(this.src)">
-    <img src="14.jpg" onclick="openModal(this.src)">
-    <img src="15.jpg" onclick="openModal(this.src)">
-    <img src="16.jpg" onclick="openModal(this.src)">
-    <img src="17.jpg" onclick="openModal(this.src)">
+    <div id="caption">ความทรงจำที่ไม่มีวันลืม...</div>
 </div>
 
-<!-- กล่องดูรูป -->
-<div id="modal" onclick="closeModal()">
-    <span id="close">&times;</span>
-    <img id="modalImg">
-</div>
-
-<audio id="bgmusic" src="memory.mp3"></audio>
+<!-- แนะนำให้เปลี่ยนชื่อไฟล์เพลงเป็นภาษาอังกฤษ เช่น music.mp3 -->
+<audio id="bgmusic" src="บทเพลงแทนหัวใจ Our Fav Song ใจดี.mp3" preload="auto"></audio>
 
 <script>
-function goToMemory() {
-    document.getElementById("home").style.display = "none";
-    document.getElementById("gallery").style.display = "block";
-    document.getElementById("bgmusic").play();
+const slides = document.querySelectorAll(".slide");
+const music = document.getElementById("bgmusic");
+let current = 0;
+let slideInterval;
+
+function startMemory() {
+
+    // ซ่อนหน้าแรกแบบค่อยๆจาง
+    const home = document.getElementById("home");
+    home.style.opacity = "0";
+
+    setTimeout(() => {
+        home.style.display = "none";
+    }, 1500);
+
+    // เล่นเพลง
+    music.play().then(() => {
+
+        // รอ 1 วิ ให้เพลงขึ้นก่อน
+        setTimeout(() => {
+            startSlideshow();
+        }, 1000);
+
+    }).catch(() => {
+        alert("ถ้าเพลงไม่เล่น ให้เปลี่ยนชื่อไฟล์เป็นภาษาอังกฤษนะ");
+    });
 }
 
-function openModal(src) {
-    document.getElementById("modal").style.display = "block";
-    document.getElementById("modalImg").src = src;
-}
-
-function closeModal() {
-    document.getElementById("modal").style.display = "none";
+function startSlideshow() {
+    slideInterval = setInterval(() => {
+        slides[current].classList.remove("active");
+        current = (current + 1) % slides.length;
+        slides[current].classList.add("active");
+    }, 4000);
 }
 </script>
 
